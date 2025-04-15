@@ -9,6 +9,28 @@ use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\LaboratoireController;
 use App\Http\Controllers\Api\ProfesseurController;
 use App\Http\Controllers\Api\EquipeController;
+<<<<<<< HEAD
+=======
+
+Route::middleware(['jwt.auth', 'admin.actif'])->group(function () {
+    // ...
+        Route::apiResource('administrateurs', AdministrateurController::class);
+        Route::apiResource('departements', DepartementController::class);
+        Route::apiResource('grades', GradeController::class);
+        Route::apiResource('laboratoires', LaboratoireController::class);
+        Route::apiResource('equipes', EquipeController::class);
+        Route::apiResource('professeurs', ProfesseurController::class);
+        Route::apiResource('publications', PublicationController::class);   
+});
+
+
+
+
+
+
+
+
+>>>>>>> c93f50c038110c7c36bcdb29cc2f48b4cc4b1e4b
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AuthProfesseurController;
 

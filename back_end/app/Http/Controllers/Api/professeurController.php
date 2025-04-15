@@ -23,19 +23,19 @@ class ProfesseurController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:20',
-            'prenom' => 'required|string|max:20',
-            'email' => 'required|email|unique:professeurs,email',
-            'telephone' => 'required|string',
-            'code_authentification' => 'required|string|size:5|unique:professeurs,code_authentification',
-            'mot_de_passe' => 'required|string',
+            'nom' => 'string|max:20',
+            'prenom' => 'string|max:20',
+            'email' => 'email|unique:professeurs,email',
+            'telephone' => 'string',
+            'code_authentification' => 'string|size:5|unique:professeurs,code_authentification',
+            'mot_de_passe' => 'string',
             'scopus' => 'nullable|string',
             'orcid' => 'nullable|string',
             'scholar' => 'nullable|string',
             'photo' => 'nullable',
-            'id_administrateur' => 'required|exists:administrateurs,id',
-            'id_equipe' => 'required|exists:equipes,id',
-            'id_grade' => 'required|exists:grades,id',
+            'id_administrateur' => 'exists:administrateurs,id',
+            'id_equipe' => 'exists:equipes,id',
+            'id_grade' => 'exists:grades,id',
         ]);
 
         if ($validator->fails()) {
