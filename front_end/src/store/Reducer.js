@@ -1,6 +1,7 @@
 import { combineReducers, createStore, applyMiddleware } from "redux";
-import {thunk} from 'redux-thunk';
+import {thunk} from "redux-thunk";
 
+// Reducer Auth Admin
 const authInitialState = {
   admin: null,
   token: null,
@@ -25,8 +26,7 @@ function authReducer(state = authInitialState, action) {
   }
 }
 
-
-// Reducer pour les grades
+// Reducer Grades
 const gradesInitialState = {
   list: [],
   loading: false,
@@ -46,7 +46,7 @@ function gradesReducer(state = gradesInitialState, action) {
   }
 }
 
-// Reducer pour les laboratoires
+// Reducer Laboratoires
 const laboInitialState = {
   list: [],
   loading: false,
@@ -66,7 +66,7 @@ function laboReducer(state = laboInitialState, action) {
   }
 }
 
-// Reducer pour les départements
+// Reducer Départements
 const departementInitialState = {
   list: [],
   loading: false,
@@ -86,7 +86,7 @@ function departementReducer(state = departementInitialState, action) {
   }
 }
 
-// Reducer pour les équipes
+// Reducer Équipes
 const equipeInitialState = {
   list: [],
   loading: false,
@@ -96,25 +96,24 @@ const equipeInitialState = {
 function equipeReducer(state = equipeInitialState, action) {
   switch (action.type) {
     case 'FETCH_EQUIPE_REQUEST':
-      return { ...state, loading: true };
-    case 'FETCH_EQUIPE_SUCCESS':
-      return { ...state, loading: false, list: action.payload };
-    case 'FETCH_EQUIPE_FAILURE':
-      return { ...state, loading: false, error: action.error };
     case 'CREATE_EQUIPE_REQUEST':
-      return { ...state, loading: true };
-    case 'CREATE_EQUIPE_SUCCESS':
-      return { ...state, loading: false, list: [...state.list, action.payload] };
-    case 'CREATE_EQUIPE_FAILURE':
-      return { ...state, loading: false, error: action.error };
     case 'DELETE_EQUIPE_REQUEST':
-      return { ...state, loading: true };
-    case 'DELETE_EQUIPE_SUCCESS':
-      return { ...state, loading: false, list: state.list.filter((equipe) => equipe.id !== action.payload) };
-    case 'DELETE_EQUIPE_FAILURE':
-      return { ...state, loading: false, error: action.error };
     case 'UPDATE_EQUIPE_REQUEST':
       return { ...state, loading: true };
+
+    case 'FETCH_EQUIPE_SUCCESS':
+      return { ...state, loading: false, list: action.payload };
+
+    case 'CREATE_EQUIPE_SUCCESS':
+      return { ...state, loading: false, list: [...state.list, action.payload] };
+
+    case 'DELETE_EQUIPE_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        list: state.list.filter((equipe) => equipe.id !== action.payload),
+      };
+
     case 'UPDATE_EQUIPE_SUCCESS':
       return {
         ...state,
@@ -123,23 +122,58 @@ function equipeReducer(state = equipeInitialState, action) {
           equipe.id === action.payload.id ? { ...equipe, ...action.payload } : equipe
         ),
       };
+
+    case 'FETCH_EQUIPE_FAILURE':
+    case 'CREATE_EQUIPE_FAILURE':
+    case 'DELETE_EQUIPE_FAILURE':
     case 'UPDATE_EQUIPE_FAILURE':
       return { ...state, loading: false, error: action.error };
+
     default:
       return state;
   }
 }
 
-// Combine all reducers
+// Reducer Professeurs
+const professeurInitialState = {
+  loading: false,
+  success: false,
+  error: null,
+  data: null, // Pour stocker les données du professeur
+};
+
+function professeurReducer(state = professeurInitialState, action) {
+  switch (action.type) {
+    case 'CREATE_PROFESSEUR_REQUEST':
+      return { ...state, loading: true, success: false, error: null };
+    case 'CREATE_PROFESSEUR_SUCCESS':
+      return {
+        ...state,
+        loading: false,
+        success: true,
+        data: action.payload, // Stocker les données du professeur ici
+      };
+    case 'CREATE_PROFESSEUR_FAILURE':
+      return { ...state, loading: false, success: false, error: action.error };
+    default:
+      return state;
+  }
+}
+
+
+
+// Combine tous les reducers
 const rootReducer = combineReducers({
   auth: authReducer,
   grades: gradesReducer,
   departements: departementReducer,
   laboratoires: laboReducer,
-  equipes: equipeReducer, // Ajouter le reducer pour les équipes
+  equipes: equipeReducer,
+  professeur: professeurReducer,
 });
 
-// Créer le store avec Redux Thunk
+// Crée le store Redux
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
+// ✅ Export du store
 export default store;

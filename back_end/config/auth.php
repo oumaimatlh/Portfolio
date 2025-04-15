@@ -16,6 +16,12 @@ return [
             'provider' => 'administrateurs',
 
         ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'professeurs',
+        ],
+
+
     ],
     'providers' => [
         'users' => [
@@ -26,6 +32,10 @@ return [
         'administrateurs' => [
             'driver' => 'eloquent',
             'model' => App\Models\Administrateur::class,
+        ],
+        'professeurs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Professeur::class,
         ],
     ],
 

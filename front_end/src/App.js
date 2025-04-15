@@ -10,6 +10,7 @@ import Departement from "./Portfolio/Admin/Dashboard/Departement";
 import Laboratoire from "./Portfolio/Admin/Dashboard/Laboratoire";
 import Equipe from "./Portfolio/Admin/Dashboard/Equipe";
 import LoginAdministrateur from "./Portfolio/Admin/Login";
+import AdminCreateProfesseur from "./Portfolio/Admin/Dashboard/CreateProf";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path="/admin/Dashboard/Laboratoire" element={<Laboratoire />} />
       <Route path="/admin/Dashboard/Equipe" element={<Equipe />} />
       <Route path="/admin/Dashboard/Departement" element={<Departement />} />
+      <Route path="/admin/Dashboard/CreateProf" element={<AdminCreateProfesseur />} />
 
       <Route path="/login" element={<LoginProfesseur />} />
       <Route path="/profil" element={<FormulaireProfil />} />

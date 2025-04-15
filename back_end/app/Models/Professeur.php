@@ -37,5 +37,23 @@ class Professeur extends Model
     {
         return $this->belongsTo(Grade::class, 'id_grade');
     }
+
+    protected $hidden = ['mot_de_passe'];
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
+    public function setMotDePasseAttribute($value)
+    {
+        $this->attributes['mot_de_passe'] = bcrypt($value);
+    }
+
 }
 

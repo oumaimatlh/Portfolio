@@ -14,6 +14,25 @@ export const Authentification= async (email, mot_de_passe) => {
 };
 
 //Departements : 
+export const CreateProf = async (professeurData) => {
+  const token = localStorage.getItem('authToken'); // 🔑 Récupère le token ici
+  try {
+    const res = await axios.post('http://localhost:8000/api/professeurs', professeurData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data; // Retourner les données reçues
+  } catch (err) {
+    console.error('Erreur lors de la création du professeur:', err);
+    throw err;
+  }
+};
+
+
+
+//Departements : 
 const RecupererDepartements = async () => {
   const token = localStorage.getItem('authToken'); // 🔑 Récupère le token ici
   try {
@@ -30,6 +49,27 @@ const RecupererDepartements = async () => {
 };
 
 
+/*export const createProfesseur = (data) => async (dispatch, getState) => {
+  dispatch({ type: 'CREATE_PROFESSEUR_REQUEST' });
+
+  try {
+    const token = getState().auth.token;
+    const response = await axios.post(
+      'http://localhost:8000/api/professeurs',
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    dispatch({ type: 'CREATE_PROFESSEUR_SUCCESS', payload: response.data });
+  } catch (error) {
+    dispatch({ type: 'CREATE_PROFESSEUR_FAILURE', error: error.message });
+  }
+};
+
+*/
 
 
 
@@ -213,3 +253,59 @@ export const deleteEquipe = async (id) => {
     throw err;
   }
 };
+
+
+
+
+
+
+const API_URL = 'http://localhost:8000/api';
+
+// Authentification professeur
+export const loginProfesseur = async (email, mot_de_passe) => {
+  try {
+    const res = await axios.post(`${API_URL}/professeur/login`, {
+      email,
+      mot_de_passe
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+
+
+// Récupérer les infos du profil du professeur connecté
+export const getMonProfil = async (token) => {
+  try {
+    const res = await axios.get(`${API_URL}/professeur/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// Compléter le profil après la connexion
+export const updateProfil = async (id, updatedData, token) => {
+  try {
+    const res = await axios.put(`${API_URL}/professeurs/${id}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+
+
+//create prof 
+
+

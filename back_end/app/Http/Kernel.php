@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        
         ],
 
         'api' => [
@@ -67,7 +68,11 @@ class Kernel extends HttpKernel
         'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
         'verifier.admin.actif' => \App\Http\Middleware\VerifierAdministrateurActif::class,
         'admin.actif' => \App\Http\Middleware\VerifierAdministrateurActif::class,
-
-        
+        'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,
+    
+    
     ];
+        
+        
+    
 }
