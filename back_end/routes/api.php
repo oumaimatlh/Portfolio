@@ -24,20 +24,15 @@ use App\Http\Controllers\Api\GradeController;
 use App\Http\Controllers\Api\LaboratoireController;
 use App\Http\Controllers\Api\ProfesseurController;
 use App\Http\Controllers\Api\EquipeController;
+
 Route::middleware(['jwt.auth', 'admin.actif'])->group(function () {
     // ...
         Route::apiResource('administrateurs', AdministrateurController::class);
-
         Route::apiResource('departements', DepartementController::class);
-
         Route::apiResource('grades', GradeController::class);
-
         Route::apiResource('laboratoires', LaboratoireController::class);
-
         Route::apiResource('equipes', EquipeController::class);
-
         Route::apiResource('professeurs', ProfesseurController::class);
-
         Route::apiResource('publications', PublicationController::class);   
 });
 

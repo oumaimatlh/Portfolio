@@ -23,7 +23,7 @@ function App() {
       <Route path="/admin/Dashboard/Equipe" element={<Equipe />} />
       <Route path="/admin/Dashboard/Departement" element={<Departement />} />
 
-      <Route path="/login" element={<LoginProfesseur />} />
+      <Route path="/login/Professeur" element={<LoginProfesseur />} />
       <Route path="/profil" element={<FormulaireProfil />} />
       <Route path="/portfolio" element={<PortfolioProf />} />
     </Routes>

@@ -12,7 +12,7 @@ return new class extends Migration
         Schema::create('professeurs', function (Blueprint $table) {
             $table->id(); 
 
-            $table->string('nom', 20);
+            $table->string('nom',20) ;
             $table->string('prenom', 20);
 
             $table->string('email',191)->unique();
