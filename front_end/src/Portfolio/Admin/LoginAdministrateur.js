@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {useNavigate} from 'react-router-dom'
-import { Authentification } from '../../store/Data';
+import {Authentification_Administrateur } from '../../store/Data';
 
 export default function LoginAdministrateur() {
   const [email, setEmail] = useState('');
   const [mot_de_passe, setMotDePasse] = useState('');
   
-  const { admin, message: storeMessage} = useSelector(state => state.auth);
+  const { admin, message: storeMessage} = useSelector(state => state.adminauth);
   const dispatch = useDispatch();
   const navigate=useNavigate()
   
@@ -26,14 +26,14 @@ export default function LoginAdministrateur() {
     e.preventDefault();
 
       try {
-        const response = await Authentification(email, mot_de_passe);
-        console.log(response.admin)
+        const response = await Authentification_Administrateur(email, mot_de_passe);
+        console.log(response)
     
         // Stocker le token dans localStorage
         localStorage.setItem('authToken', response.token);
        
         // Dispatch des données dans le store Redux
-        dispatch(loginSuccess(response.admin, response.token));  
+        dispatch(loginSuccess(response.user, response.token));  
         console.log(response.token)
 
       } catch (error) {

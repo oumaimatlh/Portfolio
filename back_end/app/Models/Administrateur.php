@@ -15,6 +15,11 @@
             protected $casts = [
                 'actif' => 'boolean',
             ];
+            public function getAuthPassword()
+            {
+                return $this->mot_de_passe;
+            }
+
             
             protected $hidden = ['mot_de_passe'];
 

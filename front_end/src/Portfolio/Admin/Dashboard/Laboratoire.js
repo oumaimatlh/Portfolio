@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+/*import { useEffect, useState } from 'react';
 import { fetchLaboratoires, createLaboratoire, updateLaboratoire, deleteLaboratoire, RecupererDepartements } from '../../../store/Data'; // Assure-toi d'ajouter les fonctions correspondantes dans `Data.js`
 
 function Laboratoire() {
@@ -114,4 +114,4 @@ function Laboratoire() {
   );
 }
 
-export default Laboratoire;
+export default Laboratoire;*/

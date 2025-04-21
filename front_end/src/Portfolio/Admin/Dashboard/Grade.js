@@ -1,12 +1,5 @@
-import { useEffect, useState } from 'react';
+/*import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchGrades,
-  updateGrade,
-  createGrade,
-  deleteGrade
-} from '../../../store/Data';
-
 
 function Grade() {
   const dispatch = useDispatch();
@@ -67,4 +60,4 @@ function Grade() {
   );
 }
 
-export default Grade;
+export default Grade;*/

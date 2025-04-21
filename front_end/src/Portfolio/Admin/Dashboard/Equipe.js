@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { fetchEquipes, createEquipe, updateEquipe, deleteEquipe, fetchLaboratoires } from '../../../store/Data';
+/*import { useState, useEffect } from 'react';
 
 function Equipe() {
   const [equipes, setEquipes] = useState([]);
@@ -81,7 +80,7 @@ function Equipe() {
   return (
     <div>
       <h2>{editingEquipe ? 'Modifier une équipe' : 'Ajouter une équipe'}</h2>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Affichage de l'erreur */}
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Affichage de l'erreur
 
       <form onSubmit={handleSubmit}>
         <input
@@ -108,8 +107,7 @@ function Equipe() {
       <ul>
         {equipes.map((e) => (
           <li key={e.id}>
-            {e.nom} (Laboratoire: {e.id_laboratoire}) {/* Affichage du laboratoire */}
-            <button onClick={() => handleEdit(e)}>Modifier</button>
+            {e.nom} (Laboratoire: {e.id_laboratoire}) {/* Affichage du laboratoire 
             <button onClick={() => handleDelete(e.id)}>Supprimer</button>
           </li>
         ))}
@@ -118,4 +116,4 @@ function Equipe() {
   );
 }
 
-export default Equipe;
+export default Equipe;*/

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Professeur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class ProfesseurController extends Controller
 {
@@ -42,7 +43,9 @@ class ProfesseurController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $professeur = Professeur::create($request->all());
+        $data = $request->all();
+
+        $professeur = Professeur::create($data);
 
         return response()->json($professeur, 201);
     }
@@ -92,7 +95,12 @@ class ProfesseurController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $professeur->update($request->all());
+        $data = $request->all();
+        if (isset($data['mot_de_passe'])) {
+            $data['mot_de_passe'] = bcrypt($data['mot_de_passe']);
+        }
+
+        $professeur->update($data);
 
         return response()->json($professeur);
     }

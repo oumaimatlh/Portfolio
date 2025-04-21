@@ -1,30 +1,83 @@
 import { combineReducers, createStore, applyMiddleware } from "redux";
 import {thunk} from "redux-thunk";
 
-// Reducer Auth Admin
-const authInitialState = {
-  admin: null,
-  token: null,
-  message: '',
+
+const AdminInistialisation = {
+    admin: null,
+    token: null,
+    message: null
 };
 
-function authReducer(state = authInitialState, action) {
+const AdminstrateurAuthentification = (state = AdminInistialisation, action) => {
   switch (action.type) {
-    case 'LOGIN_SUCCESS':
+    case "LOGIN_SUCCESS":
       return {
         ...state,
         admin: action.payload.admin,
         token: action.payload.token,
+        message: null, // on nettoie le message
       };
-    case 'LOGIN_FAILURE':
+    case "LOGIN_FAILURE":
       return {
         ...state,
-        message: action.payload.message,
+        admin: null,
+        token: null,
+        message: action.payload, // on stocke le message ici
       };
+
     default:
       return state;
   }
-}
+};
+
+const ProfesseurInitialisation = {
+    prof: null,
+    token: null,
+    message: null
+};
+
+const ProfesseurAuthentification = (state = ProfesseurInitialisation, action) => {
+  switch (action.type) {
+    case "LOGIN_SUCCESS":
+      return {
+        ...state,
+        prof: action.payload.prof,
+        token: action.payload.token,
+        message: null, 
+      };
+
+    case "LOGIN_FAILURE":
+      return {
+        ...state,
+        prof: null,
+        token: null,
+        message: action.payload, // on stocke le message ici
+      };
+
+    default:
+      return state;
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Reducer Grades
 const gradesInitialState = {
@@ -164,7 +217,8 @@ function professeurReducer(state = professeurInitialState, action) {
 
 // Combine tous les reducers
 const rootReducer = combineReducers({
-  auth: authReducer,
+  adminauth: AdminstrateurAuthentification,
+  profauth:ProfesseurAuthentification,
   grades: gradesReducer,
   departements: departementReducer,
   laboratoires: laboReducer,

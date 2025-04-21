@@ -1,44 +1,37 @@
 <?php
+
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Professeur extends Model
+class Professeur extends Authenticatable implements JWTSubject
 {
     use HasFactory;
+
     protected $fillable = [
-        'nom', 'prenom', 'email', 'telephone', 'code_authentification', 'mot_de_passe',
-        'scopus', 'orcid', 'scholar', 'photo',
-        'id_administrateur', 'id_equipe', 'id_grade'
+        'nom',
+        'prenom',
+        'email',
+        'telephone',
+        'code_authentification',
+        'mot_de_passe',
+        'scopus',
+        'orcid',
+        'scholar',
+        'photo',
+        'id_administrateur',
+        'id_equipe',
+        'id_grade',
     ];
-    
-
-    // Relation avec les publications
-    public function publications()
-    {
-        return $this->hasMany(Publication::class, 'professeur_id');
-    }
-
-    // Relation avec les administrateurs
-    public function administrateur()
-    {
-        return $this->belongsTo(Administrateur::class, 'id_administrateur');
-    }
-
-    // Relation avec les équipes
-    public function equipe()
-    {
-        return $this->belongsTo(Equipe::class, 'id_equipe');
-    }
-
-    // Relation avec les grades
-    public function grade()
-    {
-        return $this->belongsTo(Grade::class, 'id_grade');
-    }
 
     protected $hidden = ['mot_de_passe'];
+
+    public function getAuthPassword()
+    {
+        return $this->mot_de_passe;
+    }
 
     public function getJWTIdentifier()
     {
@@ -52,8 +45,28 @@ class Professeur extends Model
 
     public function setMotDePasseAttribute($value)
     {
-        $this->attributes['mot_de_passe'] = bcrypt($value);
+        // Évite de re-hasher un mot de passe déjà hashé
+        if (!empty($value) && !\Illuminate\Support\Str::startsWith($value, '$2y$')) {
+            $this->attributes['mot_de_passe'] = bcrypt($value);
+        } else {
+            $this->attributes['mot_de_passe'] = $value;
+        }
     }
 
-}
+    // ✅ Relations ajoutées :
 
+    public function administrateur()
+    {
+        return $this->belongsTo(Administrateur::class, 'id_administrateur');
+    }
+
+    public function equipe()
+    {
+        return $this->belongsTo(Equipe::class, 'id_equipe');
+    }
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class, 'id_grade');
+    }
+}

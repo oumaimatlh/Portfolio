@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { CreateProf } from '../../../store/Data'; // Importer la fonction de data.js
-
+/*
 // Action pour succès
 const createProfesseurSuccess = (professeurData) => ({
   type: 'CREATE_PROFESSEUR_SUCCESS',
@@ -75,3 +74,4 @@ const AdminCreateProfesseur = () => {
 };
 
 export default AdminCreateProfesseur;
+*/
