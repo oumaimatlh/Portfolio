@@ -1,7 +1,12 @@
 <?php
 
+// ==========================
+// CONTROLLER : ProfesseurController.php
+// ==========================
+
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Professeur;
 use Illuminate\Http\Request;
@@ -10,17 +15,11 @@ use Illuminate\Support\Facades\Hash;
 
 class ProfesseurController extends Controller
 {
-    /**
-     * Lister tous les professeurs.
-     */
     public function index()
     {
         return response()->json(Professeur::with(['administrateur', 'equipe', 'grade'])->get(), 200);
     }
 
-    /**
-     * Ajouter un nouveau professeur.
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -44,15 +43,13 @@ class ProfesseurController extends Controller
         }
 
         $data = $request->all();
+        $data['mot_de_passe'] = bcrypt($data['mot_de_passe']);
 
         $professeur = Professeur::create($data);
 
         return response()->json($professeur, 201);
     }
 
-    /**
-     * Afficher un professeur par ID.
-     */
     public function show(string $id)
     {
         $professeur = Professeur::with(['administrateur', 'equipe', 'grade'])->find($id);
@@ -64,9 +61,6 @@ class ProfesseurController extends Controller
         return response()->json($professeur);
     }
 
-    /**
-     * Mettre à jour un professeur.
-     */
     public function update(Request $request, string $id)
     {
         $professeur = Professeur::find($id);
@@ -105,9 +99,6 @@ class ProfesseurController extends Controller
         return response()->json($professeur);
     }
 
-    /**
-     * Supprimer un professeur.
-     */
     public function destroy(string $id)
     {
         $professeur = Professeur::find($id);
@@ -120,4 +111,43 @@ class ProfesseurController extends Controller
 
         return response()->json(['message' => 'Professeur supprimé avec succès']);
     }
+
+    public function updatePortfolio(Request $request)
+{
+    
+
+    // ✅ Utiliser le bon guard
+    $professeur = Auth::guard('professeur')->user();
+    \Log::info('📥 Données reçues Laravel', ['data' => $request->all()]);
+    \Log::info('✅ Professeur connecté', ['id' => optional($professeur)->id]);
+    if (!$professeur) {
+        return response()->json(['message' => 'Non authentifié'], 401);
+    }
+
+    $validated = $request->validate([
+        'nom' => 'required|string',
+        'prenom' => 'required|string',
+        'email' => 'required|email',
+        'telephone' => 'required|string',
+        'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+        'id_grade' => 'required|exists:grades,id',
+        'id_equipe' => 'required|exists:equipes,id',
+    ]);
+
+    $professeur->fill($validated);
+
+    if ($request->hasFile('photo')) {
+        \Log::info('📸 Fichier photo détecté');
+        
+        $path = $request->file('photo')->store('professeurs/photos', 'public');
+        $professeur->photo = $path;
+    }
+
+    $professeur->is_completed = true;
+    $professeur->save();
+
+    return response()->json(['message' => 'Profil mis à jour avec succès']);
+}
+
+    
 }

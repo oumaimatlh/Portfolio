@@ -1,7 +1,7 @@
 import { combineReducers, createStore, applyMiddleware } from "redux";
 import {thunk} from "redux-thunk";
 
-
+//Authentification Administration  : 
 const AdminInistialisation = {
     admin: null,
     token: null,
@@ -30,200 +30,86 @@ const AdminstrateurAuthentification = (state = AdminInistialisation, action) => 
   }
 };
 
+// store/reducers/professeurReducer.js
+
 const ProfesseurInitialisation = {
-    prof: null,
-    token: null,
-    message: null
+  prof: null,
+  token: null,
+  isCompleted: null,
+  message: null,
+  loading: false,      // ✅ nouveau : pour gérer le chargement
+  updateSuccess: false // ✅ nouveau : pour savoir si update profil est réussi
 };
 
 const ProfesseurAuthentification = (state = ProfesseurInitialisation, action) => {
   switch (action.type) {
+
+    // 🔵 Lorsqu'on se connecte avec succès
     case "LOGIN_SUCCESS":
       return {
         ...state,
         prof: action.payload.prof,
         token: action.payload.token,
-        message: null, 
+        isCompleted: action.payload.is_completed,
+        message: null,
+        loading: false,
+        updateSuccess: false,
       };
 
+    // 🔴 Lorsqu'on échoue la connexion
     case "LOGIN_FAILURE":
       return {
         ...state,
         prof: null,
         token: null,
-        message: action.payload, // on stocke le message ici
+        isCompleted: null,
+        message: action.payload,
+        loading: false,
+        updateSuccess: false,
       };
 
-    default:
-      return state;
-  }
-};
+    // 🟠 Début du chargement pour update
+    case "UPDATE_PROFILE_START":
+      return {
+        ...state,
+        loading: true,
+        updateSuccess: false,
+      };
 
+    // 🟢 Succès de mise à jour profil
+    case "UPDATE_PROFILE_SUCCESS":
+      return {
+        ...state,
+        prof: { ...state.prof, ...action.payload }, // on met à jour les données du prof
+        isCompleted: 1,
+        loading: false,
+        updateSuccess: true,
+      };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Reducer Grades
-const gradesInitialState = {
-  list: [],
-  loading: false,
-  error: null,
-};
-
-function gradesReducer(state = gradesInitialState, action) {
-  switch (action.type) {
-    case 'FETCH_GRADES_REQUEST':
-      return { ...state, loading: true };
-    case 'FETCH_GRADES_SUCCESS':
-      return { ...state, loading: false, list: action.payload };
-    case 'FETCH_GRADES_FAILURE':
-      return { ...state, loading: false, error: action.error };
-    default:
-      return state;
-  }
-}
-
-// Reducer Laboratoires
-const laboInitialState = {
-  list: [],
-  loading: false,
-  error: null,
-};
-
-function laboReducer(state = laboInitialState, action) {
-  switch (action.type) {
-    case 'FETCH_LABORATOIRES_REQUEST':
-      return { ...state, loading: true };
-    case 'FETCH_LABORATOIRES_SUCCESS':
-      return { ...state, loading: false, list: action.payload };
-    case 'FETCH_LABORATOIRES_FAILURE':
-      return { ...state, loading: false, error: action.error };
-    default:
-      return state;
-  }
-}
-
-// Reducer Départements
-const departementInitialState = {
-  list: [],
-  loading: false,
-  error: null,
-};
-
-function departementReducer(state = departementInitialState, action) {
-  switch (action.type) {
-    case 'FETCH_DEPARTEMENTS_REQUEST':
-      return { ...state, loading: true };
-    case 'FETCH_DEPARTEMENTS_SUCCESS':
-      return { ...state, loading: false, list: action.payload };
-    case 'FETCH_DEPARTEMENTS_FAILURE':
-      return { ...state, loading: false, error: action.error };
-    default:
-      return state;
-  }
-}
-
-// Reducer Équipes
-const equipeInitialState = {
-  list: [],
-  loading: false,
-  error: null,
-};
-
-function equipeReducer(state = equipeInitialState, action) {
-  switch (action.type) {
-    case 'FETCH_EQUIPE_REQUEST':
-    case 'CREATE_EQUIPE_REQUEST':
-    case 'DELETE_EQUIPE_REQUEST':
-    case 'UPDATE_EQUIPE_REQUEST':
-      return { ...state, loading: true };
-
-    case 'FETCH_EQUIPE_SUCCESS':
-      return { ...state, loading: false, list: action.payload };
-
-    case 'CREATE_EQUIPE_SUCCESS':
-      return { ...state, loading: false, list: [...state.list, action.payload] };
-
-    case 'DELETE_EQUIPE_SUCCESS':
+    // 🔴 Échec de mise à jour profil
+    case "UPDATE_PROFILE_FAILURE":
       return {
         ...state,
         loading: false,
-        list: state.list.filter((equipe) => equipe.id !== action.payload),
+        updateSuccess: false,
+        message: action.payload,
       };
-
-    case 'UPDATE_EQUIPE_SUCCESS':
-      return {
-        ...state,
-        loading: false,
-        list: state.list.map((equipe) =>
-          equipe.id === action.payload.id ? { ...equipe, ...action.payload } : equipe
-        ),
-      };
-
-    case 'FETCH_EQUIPE_FAILURE':
-    case 'CREATE_EQUIPE_FAILURE':
-    case 'DELETE_EQUIPE_FAILURE':
-    case 'UPDATE_EQUIPE_FAILURE':
-      return { ...state, loading: false, error: action.error };
 
     default:
       return state;
   }
-}
-
-// Reducer Professeurs
-const professeurInitialState = {
-  loading: false,
-  success: false,
-  error: null,
-  data: null, // Pour stocker les données du professeur
 };
 
-function professeurReducer(state = professeurInitialState, action) {
-  switch (action.type) {
-    case 'CREATE_PROFESSEUR_REQUEST':
-      return { ...state, loading: true, success: false, error: null };
-    case 'CREATE_PROFESSEUR_SUCCESS':
-      return {
-        ...state,
-        loading: false,
-        success: true,
-        data: action.payload, // Stocker les données du professeur ici
-      };
-    case 'CREATE_PROFESSEUR_FAILURE':
-      return { ...state, loading: false, success: false, error: action.error };
-    default:
-      return state;
-  }
-}
+
+
+
 
 
 
 // Combine tous les reducers
 const rootReducer = combineReducers({
   adminauth: AdminstrateurAuthentification,
-  profauth:ProfesseurAuthentification,
-  grades: gradesReducer,
-  departements: departementReducer,
-  laboratoires: laboReducer,
-  equipes: equipeReducer,
-  professeur: professeurReducer,
+  profauth:ProfesseurAuthentification
 });
 
 // Crée le store Redux

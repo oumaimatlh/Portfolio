@@ -1,0 +1,213 @@
+/* ===== Fond global (pattern doux) ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='140' ...%3E") repeat;
+  opacity: 0.04;
+  z-index: -2;
+}
+
+/* ===== Wrapper ===== */
+.login-prof-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:420px;
+  padding: 2rem;
+  background: transparent;
+}
+
+/* ===== Card ===== */
+.login-prof-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 90px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  box-shadow: 0 20px 46px rgba(31, 57, 90, 0.18);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Tilt hover effet (uniquement desktop) */
+@media (hover: hover) and (min-width: 769px) {
+  .login-prof-card:hover {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-3deg);
+    box-shadow: 0 36px 72px rgba(31, 57, 90, 0.25);
+  }
+}
+
+/* ===== Bordure animée ===== */
+.login-prof-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, #0069b6, #004c88, #0180da);
+  background-size: 400% 400%;
+  animation: borderShift 6s linear infinite;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@keyframes borderShift {
+  0% { background-position: 0 0; }
+  100% { background-position: 400% 0; }
+}
+
+/* ===== Titre ===== */
+.login-prof-card h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #003545;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== Labels ===== */
+.login-prof-card .form-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #004657;
+  margin-bottom: 0.4rem;
+}
+
+/* ===== Inputs ===== */
+.login-prof-card .input-group-text {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  color: #0069b6;
+}
+
+.login-prof-card .form-control {
+  border-radius: 16px;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 14px 16px;
+  font-size: 1rem;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s;
+}
+
+.login-prof-card .form-control:focus {
+  box-shadow: 0 0 0 5px rgba(0, 105, 182, 0.2);
+}
+
+/* ===== Bouton ===== */
+.login-prof-card .btn-primary {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 18px;
+  padding: 14px 20px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #593400, #7a5d44);
+  color: #ffffff;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.login-prof-card .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(255,255,255,.45) 0%, transparent 55%);
+  opacity: 0;
+  transform: scale(0);
+  transition: transform 0.45s, opacity 0.45s;
+}
+
+.login-prof-card .btn-primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg,#5e3001, #613500);
+}
+
+.login-prof-card .btn-primary:hover::after {
+  opacity: 1;
+  transform: scale(1.5);
+}
+
+/* ===== Toggle œil (password) ===== */
+.toggle-eye-btn {
+  background: rgba(0, 105, 182, 0.1);
+  border: none;
+  border-radius: 0 16px 16px 0;
+  color: #0069b6;
+
+  font-size: 1.2rem;
+}
+
+/* ===== Alert stylisé ===== */
+.alert-danger {
+  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  font-size: 0.95rem;
+}
+
+/* ===== Responsivité Mobile/Tablette/Laptop ===== */
+
+/* Petits téléphones */
+@media (max-width: 480px) {
+  .login-prof-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    border-radius: 20px;
+  }
+  .login-prof-card h2 {
+    font-size: 1.6rem;
+    
+  }
+  .login-prof-card .btn-primary {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+}
+
+/* Tablettes */
+@media (min-width: 481px) and (max-width: 768px) {
+  .login-prof-wrapper {
+    width: 100%;
+    height:400px;
+
+  }
+  .login-prof-card {
+    padding: 2.5rem 2rem;
+    max-width: 500px;
+  }
+  .login-prof-card h2 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Laptops normaux */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .login-prof-wrapper {
+  
+    height:500px;
+
+  }
+  .login-prof-card {
+    max-width: 500px;
+  }
+}
+
+/* Grands écrans */
+@media (min-width: 1201px) {
+  .login-prof-card {
+    max-width: 440px;
+  }
+}

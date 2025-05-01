@@ -9,33 +9,46 @@
         use App\Http\Controllers\Api\LaboratoireController;
         use App\Http\Controllers\Api\ProfesseurController;
         use App\Http\Controllers\Api\EquipeController;
-        
+    
         use App\Http\Controllers\Api\AdminAuthController;
         use App\Http\Controllers\Api\ProfesseurAuthController;
-        
-        Route::post('admin/login', [AdminAuthController::class, 'login']);
-        Route::post('professeur/login', [ProfesseurAuthController::class, 'login']);
-        Route::apiResource('home/professeurs', ProfesseurController::class);
 
-        // Routes protégées pour les administrateurs
-        Route::group(['middleware' => ['auth.admin']], function () {
-            Route::apiResource('administrateurs', AdministrateurController::class);
-            Route::apiResource('departements', DepartementController::class);
-            Route::apiResource('grades', GradeController::class);
-            Route::apiResource('laboratoires', LaboratoireController::class);
-            Route::apiResource('equipes', EquipeController::class);
-            Route::apiResource('professeurs', ProfesseurController::class);
-            Route::apiResource('publications', PublicationController::class);
-        });
-        
-        // Routes protégées pour les professeurs
-        Route::group(['middleware' => ['auth.professeur']], function () {
-            Route::apiResource('professeurs', ProfesseurController::class);
-            Route::apiResource('grades', GradeController::class);
-            Route::apiResource('laboratoires', LaboratoireController::class);
-            Route::apiResource('equipes', EquipeController::class);
-            Route::apiResource('departements', DepartementController::class);
-            Route::apiResource('publications', PublicationController::class);
-            // Si nécessaire, ajoute les autres ressources ou modifie les accès.
-        });
+
+
+
+
+
+
+            // Authentification
+            Route::post('admin/login', [AdminAuthController::class, 'login']);
+            Route::post('professeur/login', [ProfesseurAuthController::class, 'login']);
+
+            // Route publique
+            Route::apiResource('home/professeurs', ProfesseurController::class);
+
+            // Routes protégées pour les administrateurs
+            Route::middleware(['auth.admin'])->group(function () {
+                Route::apiResource('administrateurs', AdministrateurController::class);
+                Route::apiResource('departements', DepartementController::class);
+                Route::apiResource('grades', GradeController::class);
+                Route::apiResource('laboratoires', LaboratoireController::class);
+                Route::apiResource('equipes', EquipeController::class);
+                Route::apiResource('professeurs', ProfesseurController::class);
+                Route::apiResource('publications', PublicationController::class);
+            });
+
+            // ✅ Routes protégées pour les professeurs
+            Route::middleware(['auth.professeur'])->group(function () {
+                // ✅ Ta route personnalisée AVANT les ressources REST
+                Route::put('/professeur/update-portfolio', [ProfesseurController::class, 'updatePortfolio']);
+
+                // Routes REST
+                Route::apiResource('professeurs', ProfesseurController::class);
+                Route::apiResource('grades', GradeController::class);
+                Route::apiResource('laboratoires', LaboratoireController::class);
+                Route::apiResource('equipes', EquipeController::class);
+                Route::apiResource('departements', DepartementController::class);
+                Route::apiResource('publications', PublicationController::class);
+            });
+
         

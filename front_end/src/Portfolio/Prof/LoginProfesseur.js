@@ -2,118 +2,133 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Authentification_Professeurs } from '../../store/Data';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
+import * as bootstrap from 'bootstrap';
+import './loginprofesseur.css';
 
 export default function LoginProfesseurs() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { prof, isCompleted, message: storeMessage } = useSelector(s => s.profauth);
 
-  const { prof, message: storeMessage } = useSelector(state => state.profauth);
 
-  const [code_authentification, setCodeAuthentification] = useState('');
-  const [mot_de_passe, setMotDePasse] = useState('');
+  const [code, setCode] = useState('');
+  const [pwd, setPwd] = useState('');
   const [errors, setErrors] = useState({});
-  const [showPassword, setShowPassword] = useState(false);
+  const [show, setShow] = useState(false);
 
-  const loginSuccess = (prof, token) => ({
-    type: "LOGIN_SUCCESS",
-    payload: { prof, token }
+  const loginSuccess = (prof, token, is_completed) => ({
+    type: 'LOGIN_SUCCESS',
+    payload: { prof, token, is_completed }
   });
 
-  const loginFailure = (message) => ({
-    type: "LOGIN_FAILURE",
-    payload: message
+  const loginFailure = (msg) => ({
+    type: 'LOGIN_FAILURE',
+    payload: msg
   });
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!code_authentification.trim()) {
-      newErrors.code_authentification = "Le code d'authentification est requis.";
-    } else if (code_authentification.length !== 5) {
-      newErrors.code_authentification = "Le code doit comporter exactement 5 caractères.";
-    }
-
-    if (!mot_de_passe.trim()) {
-      newErrors.mot_de_passe = "Le mot de passe est requis.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const validate = () => {
+    const e = {};
+    if (!code.trim()) e.code = 'Code requis';
+    else if (code.length !== 5) e.code = 'Exactement 5 caractères';
+    if (!pwd.trim()) e.pwd = 'Mot de passe requis';
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleSeConnecter = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
+    if (!validate()) return;
     try {
-      const response = await Authentification_Professeurs(code_authentification, mot_de_passe);
-      localStorage.setItem('authToken', response.token);
-      dispatch(loginSuccess(response.user, response.token));
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        dispatch(loginFailure("Code d'authentification ou mot de passe incorrect."));
-      } else {
-        dispatch(loginFailure("Erreur lors de la connexion."));
-      }
+      const res = await Authentification_Professeurs(code, pwd);
+      localStorage.setItem('authToken', res.token);
+
+      dispatch(loginSuccess(res.user, res.token, res.is_completed));
+    } catch {
+      dispatch(loginFailure("Code ou mot de passe incorrect"));
     }
   };
 
   useEffect(() => {
     if (prof) {
-      navigate('/accueil');
+      const modalEl = document.getElementById('connexionModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) {
+        modal.hide();
+      }
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove();
+      }
+
+      // ✅ Rediriger selon isCompleted
+      if (isCompleted === 0) {
+        navigate('/professeur/completer-profil');
+
+      } else {
+        navigate('/professeur/portfolio');
+   
+      }
     }
-  }, [prof, navigate]);
+  }, [prof, isCompleted, navigate]);
 
   return (
-    <div className="container d-flex align-items-center justify-content-center min-vh-100">
-      <div className="col-md-6 col-lg-5 bg-white p-4 rounded shadow">
-        <h2 className="text-center mb-4 text-primary">Connexion Professeur</h2>
-
-        <form onSubmit={handleSeConnecter}>
-          {/* Code Authentification */}
+    <div className="login-prof-wrapper">
+      <div className="login-prof-card p-4">
+        <h2 className="text-center mb-4">Connexion Professeur</h2>
+        <form onSubmit={handleSubmit}>
+          {/* === Code d’authentification === */}
           <div className="mb-3">
             <label className="form-label">Code d'authentification *</label>
-            <input
-              type="text"
-              className={`form-control ${errors.code_authentification ? 'is-invalid' : ''}`}
-              value={code_authentification}
-              onChange={(e) => setCodeAuthentification(e.target.value)}
-            />
-            {errors.code_authentification && (
-              <div className="invalid-feedback">{errors.code_authentification}</div>
+            <div className="input-group">
+              <span className="input-group-text">🔑</span>
+              <input
+                type="text"
+                className={`form-control ${errors.code ? 'is-invalid' : ''}`}
+                placeholder="Ex. A1234"
+                value={code}
+                onChange={e => setCode(e.target.value)}
+                maxLength={5}
+                autoComplete="off"
+              />
+            </div>
+            {errors.code && (
+              <div className="invalid-feedback d-block">{errors.code}</div>
             )}
           </div>
 
-          {/* Mot de passe */}
+          {/* === Mot de passe === */}
           <div className="mb-3">
             <label className="form-label">Mot de passe *</label>
             <div className="input-group">
+              <span className="input-group-text">🔒</span>
               <input
-                type={showPassword ? 'text' : 'password'}
-                className={`form-control ${errors.mot_de_passe ? 'is-invalid' : ''}`}
-                value={mot_de_passe}
-                onChange={(e) => setMotDePasse(e.target.value)}
+                type={show ? 'text' : 'password'}
+                className={`form-control ${errors.pwd ? 'is-invalid' : ''}`}
+                placeholder="********"
+                value={pwd}
+                onChange={e => setPwd(e.target.value)}
+                autoComplete="current-password"
               />
               <button
                 type="button"
-                className="btn btn-outline-secondary"
-                onClick={() => setShowPassword(!showPassword)}
+                className="btn toggle-eye-btn"
+                onClick={() => setShow(!show)}
                 tabIndex={-1}
               >
-                {showPassword ? '🙈' : '👁️'}
+                {show ? '🙈' : '👁️'}
               </button>
-              {errors.mot_de_passe && (
-                <div className="invalid-feedback d-block">{errors.mot_de_passe}</div>
-              )}
             </div>
+            {errors.pwd && (
+              <div className="invalid-feedback d-block">{errors.pwd}</div>
+            )}
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">Se connecter</button>
+          <button type="submit" className="btn btn-primary w-100">
+            Se connecter
+          </button>
 
           {storeMessage && (
-            <div className="alert alert-danger text-center mt-3 ">
+            <div className="alert alert-danger text-center mt-3">
               {storeMessage}
             </div>
           )}
