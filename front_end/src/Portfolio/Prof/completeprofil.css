@@ -1,12 +1,12 @@
 :root {
   --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-secondary: 'Poppins', Arial, sans-serif;
+  --font-secondary: 'Poppins', Arial, sans-serif; 
   --gradient-primary: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   --color-primary: #2A2F35;
   --color-secondary: #6C757D;
   --color-accent: #001b37;
   --color-orcid: #001b37;
-  --color-scopus: #840000;
+  --color-scopus: #824e00;
   --color-scholar: #6f3f00;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -17,17 +17,32 @@ body {
   line-height: 1.6;
   color: var(--color-primary);
 }
+.hero-content {
+  background: rgba(255, 254, 253, 0.285) !important;
+  backdrop-filter: blur(10px);           /* effet de flou */
+  -webkit-backdrop-filter: blur(20px);   /* compatibilité Safari */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* bordure subtile pour accentuer l'effet verre */
+}
 
+/* Ajouter cette règle */
+.hero-content h1 {
+  font-family: Rockwell, "Courier Bold", Courier, Georgia, Times, "Times New Roman", serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
 h1, h2, h3 {
   font-family: var(--font-secondary);
   font-weight: 600;
   letter-spacing: -0.025em;
 }
-
 .hero-section {
-  padding: 8rem 0;
+  padding: 2px;
+  margin: 8rem 0; /* Réduction du padding vertical */
   background: transparent;
+  min-height: auto; /* S'assure qu'aucune hauteur minimale n'est imposée */
+
 }
+
 .hero-bg-overlay {
   background-image: url("data:image/svg+xml,%3Csvg width='600' height='600' viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23001B37' fill-opacity='0.05'%3E%3Ccircle cx='100' cy='150' r='8'/%3E%3Ccircle cx='250' cy='80' r='8'/%3E%3Ccircle cx='400' cy='200' r='8'/%3E%3Cpath d='M100 150L250 80' stroke='%23001B37' stroke-width='2'/%3E%3Cpath d='M250 80L400 200' stroke='%23001B37' stroke-width='2'/%3E%3Cpath d='M500 500H450L440 480H460V460H440V440H500V460H480V480H500L490 500Z'/%3E%3Ccircle cx='50' cy='500' r='3'/%3E%3Ccircle cx='150' cy='550' r='3'/%3E%3Ccircle cx='200' cy='450' r='3'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 200px;
@@ -111,18 +126,18 @@ h1, h2, h3 {
 .progress-steps .step {
   width: 40px;
   height: 4px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(139, 139, 139, 0.1);
   border-radius: 2px;
   transition: all 0.3s ease;
 }
 
 .progress-steps .step.completed {
-  background: #001b37;
+  background: #015677;
   width: 60px;
 }
 
 .progress-steps .step.active {
-  background: #840000;
+  background: #6b3900;
   width: 60px;
 }
 
@@ -133,7 +148,7 @@ h1, h2, h3 {
 
 .floating-card {
   position: absolute;
-  background: white;
+  background: rgba(255, 255, 255, 0.437);
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -178,31 +193,103 @@ h1, h2, h3 {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Ajouter ces règles pour l'image */
+.main-illustration {
+  width: 100%;
+  height: auto;
+  position: relative;
+  margin-top: 19px;
+  z-index: 1;
+  margin-left: 40%; /* Décalage pour agrandir l'image vers la gauche */
+}
+
+.main-illustration img {
+  transform: scale(1.9) translateX(9%); /* Agrandissement de 40% */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 130%; /* Permet de dépasser du conteneur */
+  height: auto;
+}
+
+.main-illustration:hover img {
+  transform: scale(1.45) translateX(10%); /* Effet de zoom au survol */
+}
 
 @media (max-width: 992px) {
-  .hero-section {
-    padding: 4rem 0;
-  }
-  
-  .hero-content {
-    backdrop-filter: blur(10px);
-  }
-  
   .main-illustration {
-    max-width: 80%;
-    margin: 0 auto;
+    margin-left: 0;
+    max-width: 100%;
+  }
+  
+  .main-illustration img {
+    transform: scale(1.15);
+    max-width: 100%;
   }
 }
 
-/* Formulaire */
-.form-section {
-  padding: 2.5rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+@media (max-width: 768px) {
+  .main-illustration img {
+    transform: scale(1);
+    margin-left: 0;
+  }
 }
+.profil-form{
+ 
+  padding: 2px;
+  background: transparent;
+  min-height: auto; 
+}
+.container{
+  background: rgba(177, 114, 52, 0) !important;
+  backdrop-filter: blur(10px);           /* effet de flou */
+  -webkit-backdrop-filter: blur(20px);   /* compatibilité Safari */
+  border: 1px solid rgba(255, 255, 255, 0);
+}
+/* Modification des sections formulaire */
+.form-section {
+  
+  background: rgba(255, 254, 253, 0.427);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 2rem !important;
+  margin: 2rem 0;
+  box-shadow: 0 8px 32px rgba(0, 27, 55, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.form-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, 
+    rgba(255,255,255,0.4) 0%, 
+    rgba(255,255,255,0.1) 100%);
+  z-index: -1;
+  border-radius: inherit;
+}
+
+/* Adaptation responsive */
+@media (max-width: 768px) {
+  .main-illustration img {
+    transform: scale(1);
+    max-width: 100%;
+    margin-left: 0;
+  }
+  
+  .form-section {
+    backdrop-filter: blur(8px);
+    padding: 1.5rem !important;
+  }
+}
+
 
 .section-title {
   font-size: 1.4rem;
-  color: var(--color-accent);
+  color: rgb(10, 26, 38);
   padding-bottom: 1rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--color-accent);
@@ -222,7 +309,7 @@ h1, h2, h3 {
 .form-control, .form-select {
   border-radius: 8px;
   padding: 1rem 1.25rem;
-  border: 1px solid #dee2e6;
+  border: 1px solid #d6e9f6;
   transition: var(--transition);
   font-size: 0.95rem;
 }
@@ -240,25 +327,26 @@ h1, h2, h3 {
 
 /* Boutons */
 .btn-primary {
-  background: var(--color-accent);
+  background:rgb(1, 15, 41);
   border-radius: 8px;
   font-weight: 500;
   letter-spacing: 0.02em;
   font-size: 1.1rem;
-  padding: 1.1rem 2rem;
-  border: 2px solid transparent;
+  padding: 1.1rem 2rem;  
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-  background: var(--color-scopus);
+  box-shadow: 0 10px 20px rgb(248, 255, 248);
+  background: rgb(247, 230, 200);
+  color: #015677;
+  border: none;
 }
 
 /* Upload photo */
 .profile-preview {
   border-radius: 16px;
-  background: #fff;
+  background: #ffffff95;
   overflow: hidden;
   position: relative;
 }

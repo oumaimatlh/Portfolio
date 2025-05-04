@@ -25,7 +25,7 @@ class ProfesseurController extends Controller
         $validator = Validator::make($request->all(), [
             'nom' => 'string|max:20',
             'prenom' => 'string|max:20',
-            'email' => 'email|unique:professeurs,email',
+            'email' => 'email|email',
             'telephone' => 'string',
             'code_authentification' => 'string|size:5|unique:professeurs,code_authentification',
             'mot_de_passe' => 'string',
