@@ -1,19 +1,20 @@
 // ✅ Complete_profil.js (React) - corrigé
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux'
 import {
-  fetchGrades, fetchEquipes, updatePortfolio
+  fetchGrades, fetchEquipes, updatePortfolio,SeDeconnecter
 } from '../../store/Data';
 import './completeprofil.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import * as bootstrap from 'bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faScopus } from '@fortawesome/free-brands-svg-icons';
-import { faGoogleScholar } from '@fortawesome/free-brands-svg-icons';
+
 
 export default function Complete_profil() {
+ 
   const navigate = useNavigate();
+  const dispatch=useDispatch()
   const [modalStep, setModalStep] = useState('choose');
 
   const [formData, setFormData] = useState({
@@ -40,6 +41,20 @@ export default function Complete_profil() {
       [name]: files ? files[0] : value,
     }));
   };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [resGrades, resEquipes] = await Promise.all([
+          fetchGrades(), fetchEquipes()
+        ]);
+        setGrades(resGrades.data);
+        setEquipes(resEquipes.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadData();
+  }, []);
 
   const handleSubmit = async (e) => {
       e.preventDefault();
@@ -73,21 +88,17 @@ export default function Complete_profil() {
       }
     }
   };
+  const handleLogout = async () => {
+    try {
+      await SeDeconnecter();
+      dispatch({ type: 'LOGOUT' }); // Reset du state Redux
+      navigate('/');
+    } catch (error) {
+      navigate('/');
+    }
+  };
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [resGrades, resEquipes] = await Promise.all([
-          fetchGrades(), fetchEquipes()
-        ]);
-        setGrades(resGrades.data);
-        setEquipes(resEquipes.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    loadData();
-  }, []);
+  
 
   return (
      <div className="page-home">
@@ -101,37 +112,57 @@ export default function Complete_profil() {
                 <span className="navbar-toggler-icon"></span>
               </button>
               <div className="d-none d-lg-flex align-items-center ms-auto">
-                <ul className="navbar-nav align-items-center">
-                  <li className="nav-item">
-                    <button
-                      className="nav-link btn btn-link"
-                      onClick={() => {
-                        setModalStep('choose');
-                        const modal = new bootstrap.Modal(document.getElementById('connexionModal'));
-                        modal.show();
-                      }}
-                    >
-                      Déconnexion
-                    </button>
-                  </li>
-                </ul>
-              </div>
-              <div className="offcanvas offcanvas-start custom-offcanvas d-lg-none" tabIndex="-1" id="offcanvasNavbar">
-                <div className="offcanvas-body">
-                  <button
-                    className="nav-link custom-btn"
-                    onClick={() => {
-                      setModalStep('choose');
-                      const modal = new bootstrap.Modal(document.getElementById('connexionModal'));
-                      modal.show();
-                    }}
-                  >
-                    Déconnexion
-                  </button>
-                </div>
-              </div>
+            <ul className="navbar-nav align-items-center">
+              <li className="nav-item">
+                <button
+                  className="nav-link btn btn-link"
+                  data-bs-toggle="modal"
+                  data-bs-target="#logoutModal"
+                >
+                  Déconnexion
+                </button>
+              </li>
+            </ul>
+          </div>
+          <div className="offcanvas offcanvas-start custom-offcanvas d-lg-none" tabIndex="-1" id="offcanvasNavbar">
+            <div className="offcanvas-body">
+              <button
+                className="nav-link custom-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#logoutModal"
+              >
+                Déconnexion
+              </button>
+            </div>
+          </div>
             </div>
           </nav>
+            {/* Modale de déconnexion */}
+      <div className="modal fade" id="logoutModal" tabIndex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="logoutModalLabel">Confirmation de déconnexion</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              Êtes-vous sûr de vouloir vous déconnecter ?
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn"style={{background:'rgb(63, 41, 0)' , color:'white'}}data-bs-dismiss="modal">Annuler</button>
+              <button 
+                type="button" 
+                className="btn"
+                style={{background:' #00253f' , color:'white'}}
+                onClick={handleLogout}
+                data-bs-dismiss="modal"
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
           <main className='complete-profil-section'>
           <section className='hero-section position-relative overflow-hidden'>
             <div className="container position-relative z-2">
@@ -154,9 +185,10 @@ export default function Complete_profil() {
             Rejoignez notre communauté scientifique en complétant votre profil professionnel. 
             <span className="d-block mt-2">Accédez à des outils de recherche avancés et augmentez votre visibilité internationale.</span>
           </p>
-          
+
    
-        </div>
+        </div>  
+        
 
         {/* Partie Visuelle */}
         <div className="col-lg-6">
@@ -170,20 +202,27 @@ export default function Complete_profil() {
             </div>
             {/* Partie Visuelle */}
           <div className="col-lg-6">
-            <div className="hero-visual p-4 position-relative">
-              {/* ... autres éléments ... */}
+            <div className="hero-visual p-4 position-relative ">
+              
               <div className="main-illustration">
-                <img 
+                <img  
                   src="/men1.png" 
                   alt="Profil scientifique" 
-                  className="img-fluid floating-animation" 
+                  className="img-fluid floating-animation " 
                  
 
                 />
               </div>
             </div>
+    
           </div>
+          
           </div>
+        </div>
+        <div className="scroll-indicator text-center mt-5">
+            <a href="#formulaire" className="scroll-arrow">
+              <i className="fas fa-chevron-down fa-2x animate-bounce"></i>
+            </a>
         </div>
       </div>
     </div>
@@ -195,14 +234,15 @@ export default function Complete_profil() {
   <div className="gradient-blur-effect"></div>
 </section>
   {/* Formulaire */}
-  <section className='profil-form'>
-    <div className="container ">
+  
+  <section className='profil-form' id="formulaire">
+  <div className="container ">
       <div className="form-wrapper  rounded-4 shadow-lg overflow-hidden">
         <div className="row g-0">
           {/* Colonne Photo */}
-          <div className="col-lg-4 photo-upload-section  p-5 d-flex flex-column">
-            <div className="upload-wrapper mb-4 ">
-              <div className="profile-preview ratio ratio-1x1 mb-3 ">
+          <div className="col-lg-4 photo-upload-section  p-5 d-flex flex-column ">
+            <div className="upload-wrapper mb-4  ">
+              <div className="profile-preview ratio ratio-1x1 mb-3  ">
                 {formData.photo ? (
                   <img src={URL.createObjectURL(formData.photo)} className="rounded-circle" alt="Preview" />
                 ) : (
@@ -211,7 +251,7 @@ export default function Complete_profil() {
                   </div>
                 )}
               </div>
-              <label className="btn btn-dark w-100 mb-3">
+              <label className="btn btn-dark w-100 mb-2 ">
                 <i className="fas fa-camera me-2"></i>
                 {formData.photo ? 'Changer la photo' : 'Ajouter une photo'}
                 <input 

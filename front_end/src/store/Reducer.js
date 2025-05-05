@@ -24,6 +24,8 @@ const AdminstrateurAuthentification = (state = AdminInistialisation, action) => 
         token: null,
         message: action.payload, // on stocke le message ici
       };
+      case 'LOGOUT':
+        return AdminInistialisation; // Reset complet
 
     default:
       return state;
@@ -68,6 +70,7 @@ const ProfesseurAuthentification = (state = ProfesseurInitialisation, action) =>
         updateSuccess: false,
       };
 
+      
     // 🟠 Début du chargement pour update
     case "UPDATE_PROFILE_START":
       return {
@@ -95,6 +98,8 @@ const ProfesseurAuthentification = (state = ProfesseurInitialisation, action) =>
         message: action.payload,
       };
 
+    case 'LOGOUT':
+        return ProfesseurInitialisation; // Reset complet
     default:
       return state;
   }

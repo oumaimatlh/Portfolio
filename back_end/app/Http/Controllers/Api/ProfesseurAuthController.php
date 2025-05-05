@@ -32,4 +32,25 @@ class ProfesseurAuthController extends Controller
             'is_completed' => $professeur->is_completed,
         ]);
     }
+
+
+    
+    public function logout()
+    {
+        try {
+            Auth::guard('professeur')->logout();
+            JWTAuth::invalidate(JWTAuth::getToken());
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Professeur déconnecté avec succès'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Échec de la déconnexion'
+            ], 500);
+        }
+    }
 }

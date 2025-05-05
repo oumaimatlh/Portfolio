@@ -28,6 +28,8 @@
 
             // Routes protégées pour les administrateurs
             Route::middleware(['auth.admin'])->group(function () {
+                Route::post('admin/logout', [AdminAuthController::class, 'logout']);
+
                 Route::apiResource('administrateurs', AdministrateurController::class);
                 Route::apiResource('departements', DepartementController::class);
                 Route::apiResource('grades', GradeController::class);
@@ -39,10 +41,8 @@
 
             // ✅ Routes protégées pour les professeurs
             Route::middleware(['auth.professeur'])->group(function () {
-                // ✅ Ta route personnalisée AVANT les ressources REST
+                Route::post('professeur/logout', [ProfesseurAuthController::class, 'logout']);
                 Route::put('/professeur/update-portfolio', [ProfesseurController::class, 'updatePortfolio']);
-
-                // Routes REST
                 Route::apiResource('professeurs', ProfesseurController::class);
                 Route::apiResource('grades', GradeController::class);
                 Route::apiResource('laboratoires', LaboratoireController::class);

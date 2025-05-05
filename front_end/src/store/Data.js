@@ -25,6 +25,37 @@ export const Authentification_Professeurs = async (code_authentification, mot_de
   }
 };
 
+
+export const SeDeconnecter = async () => {
+  try {
+    const token = localStorage.getItem('authToken'); // Utiliser la bonne clé
+    const guard = localStorage.getItem('guard');
+
+    if (token && guard) {
+      await fetch(`/api/${guard}/logout`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+    }
+
+    // Nettoyer TOUTES les clés liées à l'authentification
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('token');
+    localStorage.removeItem('guard');
+    localStorage.removeItem('user');
+
+  } catch (error) {
+    localStorage.clear();
+    throw error;
+  }
+};
+
+
+
+
+
+
+
 export const updatePortfolio = (formData) => {
   const token = localStorage.getItem("authToken");
   return axios.post("http://localhost:8000/api/professeur/update-portfolio", formData, {

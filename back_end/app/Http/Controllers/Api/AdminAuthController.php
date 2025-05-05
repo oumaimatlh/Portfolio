@@ -34,5 +34,27 @@ class AdminAuthController extends Controller
             'user' => Auth::guard($guard)->user()
         ]);
     }
+
+
+
+    
+    public function logout()
+    {
+        try {
+            Auth::guard('admin')->logout();
+            JWTAuth::invalidate(JWTAuth::getToken());
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Admin déconnecté avec succès'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Échec de la déconnexion'
+            ], 500);
+        }
+    }
     
 }

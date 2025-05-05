@@ -23,7 +23,7 @@ class GradeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:50|unique:grades,nom',
+            'nom' => 'required|string|max:255|unique:grades,nom',
         ]);
 
         if ($validator->fails()) {
@@ -63,7 +63,7 @@ class GradeController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:50|unique:grades,nom,' . $id,
+            'nom' => 'required|string|max:255|unique:grades,nom,' . $id,
         ]);
 
         if ($validator->fails()) {

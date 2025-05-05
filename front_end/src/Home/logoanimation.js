@@ -16,8 +16,8 @@ const LogoAnimation = () => {
     if (container) container.appendChild(renderer.domElement);
 
     const material = new THREE.MeshStandardMaterial({
-      color: "rgb(164, 86, 8)",
-      emissive: " rgb(164, 86, 8)",
+      color: "rgb(125, 63, 1)",
+      emissive: "rgb(125, 63, 1)",
       emissiveIntensity: 0.5,
       roughness: 0.5,
       metalness: 0.2,
@@ -27,86 +27,103 @@ const LogoAnimation = () => {
     const loader = new SVGLoader();
     const fragmentPivots = [];
     const logoGroup = new THREE.Group();
-
     const specialFragmentDirections = { 0: 1, 1: -1, 2: -1, 3: 1, 4: 1 };
     let animationPhase = 'rotate';
 
     loader.load('/home.svg', (data) => {
       const allShapes = [];
-    
+
       data.paths.forEach((path) => {
-        const shapes = SVGLoader.createShapes(path);
-        shapes.forEach((shape) => {
-          allShapes.push(shape);
-        });
+        try {
+          if (!path || !path.userData || !path.subPaths.length) return;
+          const shapes = SVGLoader.createShapes(path);
+          shapes.forEach((shape) => {
+            allShapes.push(shape);
+          });
+        } catch (err) {
+          console.warn('Path ignoré pour cause d’erreur SVG :', err);
+        }
       });
-    
+
+      if (allShapes.length === 0) return;
+
       const shapesPerFragment = Math.ceil(allShapes.length / 5);
       const shapeGroups = [];
-    
+
       for (let i = 0; i < 5; i++) {
         shapeGroups.push(allShapes.slice(i * shapesPerFragment, (i + 1) * shapesPerFragment));
       }
-    
+
       const combinedGeometry = mergeGeometries(
         allShapes.map(shape => new THREE.ExtrudeGeometry(shape, { depth: 4, bevelEnabled: true })),
         false
       );
-    
+
       combinedGeometry.computeBoundingBox();
       const center = new THREE.Vector3();
       combinedGeometry.boundingBox.getCenter(center);
-    
+
       allShapes.forEach((shape) => {
         const geometry = new THREE.ExtrudeGeometry(shape, { depth: 4, bevelEnabled: true });
         const mesh = new THREE.Mesh(geometry, material.clone());
-    
+
         mesh.scale.set(0.6, -0.6, 0.6);
         mesh.position.set(-center.x * 0.6, center.y * 0.6, 0);
-    
-        mesh.material.color.set(" rgb(164, 86, 8)"); // << --- FORCER LE MARRON sur chaque mesh
-        mesh.material.emissive.set(" rgb(164, 86, 8)"); // << --- FORCER L'EMISSIVE
-    
+
+        mesh.material.color.set("rgb(125, 63, 1)");
+        mesh.material.emissive.set("rgb(125, 63, 1)");
+
         logoGroup.add(mesh);
       });
-    
+
       logoGroup.position.set(0, 0, 0);
       logoGroup.visible = false;
       scene.add(logoGroup);
-    
+
       shapeGroups.forEach((group, index) => {
-        const geometries = group.map(shape => new THREE.ExtrudeGeometry(shape, { depth: 4, bevelEnabled: true }));
+        const geometries = group
+          .map(shape => {
+            try {
+              return new THREE.ExtrudeGeometry(shape, { depth: 4, bevelEnabled: true });
+            } catch (err) {
+              console.warn("❌ Erreur lors de l’extrusion d’un shape dans le groupe :", err);
+              return null;
+            }
+          })
+          .filter(geom => geom !== null);
+      
+        if (geometries.length === 0) return;
+      
         const mergedGeometry = mergeGeometries(geometries, false);
         mergedGeometry.computeBoundingBox();
         const groupCenter = new THREE.Vector3();
         mergedGeometry.boundingBox.getCenter(groupCenter);
         mergedGeometry.translate(-groupCenter.x, -groupCenter.y, 0);
-    
+      
         const mesh = new THREE.Mesh(mergedGeometry, material.clone());
         mesh.scale.set(0.6, -0.6, 0.6);
-    
-        mesh.material.color.set(" rgb(164, 86, 8)"); // << --- FORCER SUR LES GROUPES AUSSI
-        mesh.material.emissive.set(" rgb(164, 86, 8)");
-    
+      
+        mesh.material.color.set("rgb(125, 63, 1)");
+        mesh.material.emissive.set("rgb(125, 63, 1)");
+      
         const pivot = new THREE.Group();
         pivot.position.set((groupCenter.x - center.x) * 0.6, -(groupCenter.y - center.y) * 0.6, 0);
         pivot.add(mesh);
         pivot.visible = true;
-    
+      
         pivot.userData = {
           rotationSpeed: 0.02,
           direction: specialFragmentDirections[index] || (Math.random() > 0.5 ? 1 : -1),
           targetRotation: Math.PI * 2,
           currentRotation: 0,
         };
-    
+      
         fragmentPivots.push(pivot);
         scene.add(pivot);
       });
+      
     });
-    
 
-    // Sol réfléchi
     const reflectionGeometry = new THREE.PlaneGeometry(500, 500, 100, 100);
     const reflectionMaterial = new THREE.MeshPhongMaterial({
       color: "#600101",
@@ -124,18 +141,16 @@ const LogoAnimation = () => {
     reflectionMesh.position.y = -100;
     scene.add(reflectionMesh);
 
-// Lumières
-      const rotatingLight = new THREE.PointLight(0xffffff, 1, 1000);
-      rotatingLight.position.set(200, 200, 200);
-      scene.add(rotatingLight);
+    const rotatingLight = new THREE.PointLight(0xffffff, 1, 1000);
+    rotatingLight.position.set(200, 200, 200);
+    scene.add(rotatingLight);
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Augmenté aussi un peu pour adoucir les ombres
-      scene.add(ambientLight);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+    scene.add(ambientLight);
 
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2); // Ajouté pour l'éclairage principal
-      directionalLight.position.set(0, 200, 300);
-      scene.add(directionalLight);
-
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    directionalLight.position.set(0, 200, 300);
+    scene.add(directionalLight);
 
     const animate = () => {
       requestAnimationFrame(animate);

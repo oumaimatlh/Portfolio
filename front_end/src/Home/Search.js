@@ -231,8 +231,12 @@ export default function Search() {
                 </button>
                 {showSuggestions && suggestions.length > 0 && (
                   <ul className="suggestions-list">
-                    {suggestions.map(prof => (
-                      <li key={prof._id} className="suggestion-item" onMouseDown={() => handleSelectSuggestion(prof)}>
+                   {suggestions.map((prof, index) => (
+                      <li
+                        key={prof.id || `${prof.nom}-${prof.prenom}-${index}`}
+                        className="suggestion-item"
+                        onMouseDown={() => handleSelectSuggestion(prof)}
+                      >
                         <div className="professor-info">
                           <span className="professor-name">{prof.nom} {prof.prenom}</span>
                           <span className="professor-details">{prof.domaine || 'Domaine non spécifié'}</span>
@@ -240,6 +244,7 @@ export default function Search() {
                         {prof.departement && <span className="department-badge">{prof.departement}</span>}
                       </li>
                     ))}
+
                   </ul>
                 )}
               </div>

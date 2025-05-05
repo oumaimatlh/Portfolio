@@ -33,7 +33,6 @@ class ProfesseurController extends Controller
             'orcid' => 'nullable|string',
             'scholar' => 'nullable|string',
             'photo' => 'nullable',
-            'id_administrateur' => 'exists:administrateurs,id',
             'id_equipe' => 'exists:equipes,id',
             'id_grade' => 'exists:grades,id',
         ]);
@@ -80,7 +79,6 @@ class ProfesseurController extends Controller
             'orcid' => 'nullable|string',
             'scholar' => 'nullable|string',
             'photo' => 'nullable',
-            'id_administrateur' => 'sometimes|exists:administrateurs,id',
             'id_equipe' => 'sometimes|exists:equipes,id',
             'id_grade' => 'sometimes|exists:grades,id',
         ]);
@@ -130,6 +128,9 @@ class ProfesseurController extends Controller
         'email' => 'required|email',
         'telephone' => 'required|string',
         'photo' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+        'scopus' => 'nullable|string',
+        'orcid' => 'nullable|string',
+        'scholar' => 'nullable|string',
         'id_grade' => 'required|exists:grades,id',
         'id_equipe' => 'required|exists:equipes,id',
     ]);

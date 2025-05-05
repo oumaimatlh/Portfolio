@@ -5,15 +5,30 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store/Reducer';
-import { BrowserRouter } from 'react-router-dom';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+
+// Créer un routeur avec React Router v6+ (future-proof)
+const router = createBrowserRouter([
+  {
+    path: '/*',
+    element: <App />,
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </BrowserRouter>
+  <Provider store={store}>
+    <RouterProvider
+      router={router}
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    />
+  </Provider>
 );
 
 reportWebVitals();
